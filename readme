@@ -1,0 +1,57 @@
+一个存储k/v 键/值的python nosql
+
+主要存储是dict
+键仅支撑 string
+值支撑 integer,string,list
+使用 ASCLL string的简单TCP/IP 服务器来传递消息 //客户端简单用telnet 交互
+一些像INCREMENT,DELETE,APPEND这样的高级命令
+
+请求消息格式：COMMAND;[KEY];[VALUE];[VALUE TYPE]
+VALUE中的list用逗号分隔一串 string,比如 “red,green,blue”
+类型有INT,STRING,LIST
+examples:
+"PUT;foo;1;INT"
+"GET;FOO;;"
+"PUTLIST;bar;a,b,c;LIST"
+"APPEND;bar;d;STRING"
+"GETLIST;bar;;"
+"STATS; ;;"
+"INCREMENT;foo;;"
+"DELETE; foo;;"
+
+支持命令 COMMAND：
+PUT
+参数：key,value
+目的：插入一条新的数据
+
+GET
+参数：key
+目的：像数据库检索一个纯在的值
+
+PUTLIST
+参数：key,value
+目的：向数据库插入一个新的列表条目
+
+APPEND
+参数：key,value
+目的：向数据库已有的列表中添加一个新的元素
+
+INCREMENT
+参数：key
+目的：增长数据库中的一个整形值
+
+DELETE
+参数：key
+目的：从数据库中删除一个条目
+/*
+STATS
+参数：无
+目的：请求每个执行命令的 成功/失败 的统计信息
+*/
+Reponse 回复格式：
+分两部分，用 ； 分隔，
+第一部分是true or false ,命令是否成功
+第二部分是 命令消息，当出现错误是，显示错误信息，那些成功命令时，返回成功信息
+examples：
+true;key[foo] set success
+true;1
